@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +11,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1/auth')->group(function () {
+    Route::namespace('API\V1\Auth')->group(function () {
+        Route::post('register', 'RegisterController@register')->name('auth.register');
+        Route::get('account-activation/{token}', 'AccountActivationController@activateToken')->name('auth.account.activate');
+    });
 });
