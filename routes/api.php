@@ -21,6 +21,7 @@ Route::prefix('v1/auth')->group(function () {
 
         Route::middleware(['auth:api', 'verified'])->group(function () {
            Route::get('user', 'AuthController@user')->name('auth.user');
+           Route::get('logout', 'AuthController@logout')->name('auth.logout');
         });
     });
 });
