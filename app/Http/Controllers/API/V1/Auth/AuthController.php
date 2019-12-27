@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1\Auth;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -60,5 +61,19 @@ class AuthController extends Controller
         $user->update(['active' => true, 'activation_token' => '', 'email_verified_at' => now()]);
 
         return response()->json(['data' => $user], 200);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 429);
+        }
+
+        auth()->user()->token()->revoke();
+
+        return response()->json(['message' => 'Successfully logged out'], 200);
     }
 }
