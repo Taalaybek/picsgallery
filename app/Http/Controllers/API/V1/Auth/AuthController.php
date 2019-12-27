@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1\Auth;
 
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -40,5 +41,24 @@ class AuthController extends Controller
         $request = Request::create(config('services.passport.endpoint'), 'POST', $data);
 
         return app()->handle($request);
+    }
+
+    /**
+     * @param string $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function activateToken(string $token)
+    {
+        $user = User::where('activation_token', $token)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'The activation token is invalid'
+            ], 404);
+        }
+
+        $user->update(['active' => true, 'activation_token' => '', 'email_verified_at' => now()]);
+
+        return response()->json(['data' => $user], 200);
     }
 }
