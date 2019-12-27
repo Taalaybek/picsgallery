@@ -35,7 +35,7 @@ class LoginController extends Controller
 
             return app()->handle($request);
         } else {
-            return response()->json(['message' => 'Sent data is invalid'], 200);
+            return response()->json(['message' => 'Sent data is invalid'], 401);
         }
     }
 }
