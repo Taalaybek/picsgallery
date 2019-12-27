@@ -11,9 +11,9 @@ class LoginController extends Controller
 {
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return mixed
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request)
     {
         $request->validate([
             'username' => 'required|string|min:6',
