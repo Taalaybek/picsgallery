@@ -34,9 +34,12 @@ Route::prefix('v1/auth')->group(function () {
 });
 
 /*** ALBUMS ***/
-Route::prefix('v1')->group(function () {
-    Route::namespace('API\V1')
-        ->middleware(['auth:api', 'verified'])->group(function () {
-            Route::post('albums', 'AlbumController@store')->name('albums.store');
-        });
+Route::prefix('v1')->namespace('API\V1')->group(function () {
+    /*** PROTECTED ***/
+    Route::middleware(['auth:api', 'verified'])->group(function () {
+        Route::post('albums', 'AlbumController@store')->name('albums.store');
+    });
+
+    /*** OPEN ALBUM ROUTES ***/
+    Route::get('albums/{album}', 'AlbumController@show')->name('albums.show');
 });
