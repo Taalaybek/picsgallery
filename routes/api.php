@@ -19,6 +19,13 @@ Route::prefix('v1/auth')->group(function () {
         Route::get('account-activation/{token}', 'AuthController@activateToken')->name('auth.account.activate');
         Route::post('token_refresh', 'AuthController@refreshToken')->name('auth.token_refresh');
 
+        // PASSWORD RESETS
+        Route::prefix('password')->group(function () {
+            Route::post('reset', 'PasswordResetController@create')->name('auth.password.reset');
+            Route::get('find/{token}', 'PasswordResetController@find')->name('auth.passport.find');
+            Route::post('create/new', 'PasswordResetController@updatePassword')->name('auth.password.update');
+        });
+
         Route::middleware(['auth:api', 'verified'])->group(function () {
            Route::get('user', 'AuthController@user')->name('auth.user');
            Route::get('logout', 'AuthController@logout')->name('auth.logout');
