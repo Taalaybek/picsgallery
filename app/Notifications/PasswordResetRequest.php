@@ -41,7 +41,7 @@ class PasswordResetRequest extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/api/v1/auth/password/find'.$this->resetToken);
+        $url = url('/api/v1/auth/password/find/'.$this->resetToken);
 
         return (new MailMessage)
             ->line('You are receiving this email because we received a password reset request for your account.')
