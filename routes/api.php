@@ -36,9 +36,10 @@ Route::prefix('v1/auth')->group(function () {
 /*** ALBUMS ***/
 Route::prefix('v1')->namespace('API\V1')->group(function () {
     /*** PROTECTED ***/
-    Route::middleware(['auth:api', 'verified'])->group(function () {
-        Route::post('albums', 'AlbumController@store')->name('albums.store');
-        Route::get('albums/creatorAlbums', 'AlbumController@creatorAlbums')->name('albums.creatorAlbums');
+    Route::middleware(['auth:api', 'verified'])->prefix('albums')->group(function () {
+        Route::post('', 'AlbumController@store')->name('albums.store');
+        Route::get('creatorAlbums', 'AlbumController@creatorAlbums')->name('albums.creatorAlbums');
+        Route::delete('{album}', 'AlbumController@destroy')->name('albums.destroy');
     });
 
     /*** UNPROTECTED ALBUM ROUTES ***/
