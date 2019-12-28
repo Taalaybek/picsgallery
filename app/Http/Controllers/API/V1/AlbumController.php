@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -82,11 +83,18 @@ class AlbumController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Album $album
-     * @return Response
+     * @return JsonResponse
+     * @throws \Exception
      */
     public function destroy(Album $album)
     {
-        //
+        if (auth()->user()->can('delete', $album)) {
+            $album->delete();
+
+            return response()->json(['message' => 'Successfully deleted the album'], 200);
+        }
+
+        return \response()->json(['message' => 'You need access to do this action'], 401);
     }
 
     /**
