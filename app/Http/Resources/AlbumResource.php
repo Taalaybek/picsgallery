@@ -23,4 +23,13 @@ class AlbumResource extends JsonResource
             ]
         ];
     }
+
+    public function with($request)
+    {
+        return [
+            'links' => [
+                'links' => route('albums.show', ['album' => $this->id])
+            ]
+        ];
+    }
 }
