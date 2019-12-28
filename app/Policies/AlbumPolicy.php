@@ -19,7 +19,7 @@ class AlbumPolicy
      */
     public function update(User $user, Album $album)
     {
-        //
+        return $user->id == $album->creator_id;
     }
 
     /**
