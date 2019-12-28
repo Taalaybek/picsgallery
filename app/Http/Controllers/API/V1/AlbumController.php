@@ -6,8 +6,9 @@ use App\Models\User;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\AlbumResource;
 use App\Http\Resources\AlbumsCollection;
 use App\Http\Resources\AlbumRelatedWithUserResource;
@@ -17,11 +18,13 @@ class AlbumController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return AlbumsCollection
      */
     public function index()
     {
-        //
+        return new AlbumsCollection(Cache::remember('albums.index', 60, function () {
+            return DB::table('albums')->latest()->paginate(12);
+        }));
     }
 
     /**
@@ -82,28 +85,6 @@ class AlbumController extends Controller
      * @return Response
      */
     public function destroy(Album $album)
-    {
-        //
-    }
-
-    /**
-     * Restore the specified destroyed album from storage.
-     * 
-     * @param $id
-     * @return JsonResponse
-     */
-    public function restore($id): JsonResponse
-    {
-        //
-    }
-
-    /**
-     * Force delete the specified album from storage.
-     *
-     * @param $id
-     * @return JsonResponse
-     */
-    public function forceDelete($id): JsonResponse
     {
         //
     }
