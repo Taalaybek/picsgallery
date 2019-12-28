@@ -72,11 +72,22 @@ class AlbumController extends Controller
      *
      * @param Request $request
      * @param Album $album
-     * @return Response
+     * @return AlbumResource
      */
     public function update(Request $request, Album $album)
     {
-        //
+        if (auth()->user()->can('update', $album)) {
+            $request->validate([
+                'name' => 'sometimes|string|min:6|max:255',
+                'description' => 'sometimes|string|min:10|max:400'
+            ]);
+
+            $album->update($request->all());
+
+            return new AlbumResource($album);
+        }
+
+        return response()->json(['message' => 'You need access to do this action'], 401);
     }
 
     /**
