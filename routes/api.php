@@ -40,6 +40,9 @@ Route::prefix('v1')->namespace('API\V1')->group(function () {
         Route::post('albums', 'AlbumController@store')->name('albums.store');
     });
 
-    /*** OPEN ALBUM ROUTES ***/
-    Route::get('albums/{album}', 'AlbumController@show')->name('albums.show');
+    /*** UNPROTECTED ALBUM ROUTES ***/
+    Route::prefix('albums')->group(function () {
+        Route::get('{album}', 'AlbumController@show')->name('albums.show');
+        Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
+    });
 });
