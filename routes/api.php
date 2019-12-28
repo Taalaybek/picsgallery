@@ -34,19 +34,18 @@ Route::prefix('v1/auth')->group(function () {
 });
 
 /*** ALBUMS ***/
-Route::prefix('v1')->namespace('API\V1')->group(function () {
+Route::prefix('v1/albums')->namespace('API\V1')->group(function () {
     /*** PROTECTED ***/
-    Route::middleware(['auth:api', 'verified'])->prefix('albums')->group(function () {
+    Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::post('', 'AlbumController@store')->name('albums.store');
         Route::get('creatorAlbums', 'AlbumController@creatorAlbums')->name('albums.creatorAlbums');
         Route::delete('{album}', 'AlbumController@destroy')->name('albums.destroy');
+        Route::patch('{album}', 'AlbumController@update')->name('albums.update');
     });
 
     /*** UNPROTECTED ALBUM ROUTES ***/
-    Route::prefix('albums')->group(function () {
-        Route::get('', 'AlbumController@index')->name('albums.index');
-        Route::get('user/{user}', 'AlbumController@userAlbums')->name('albums.userAlbums');
-        Route::get('{album}', 'AlbumController@show')->name('albums.show');
-        Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
-    });
+    Route::get('', 'AlbumController@index')->name('albums.index');
+    Route::get('user/{user}', 'AlbumController@userAlbums')->name('albums.userAlbums');
+    Route::get('{album}', 'AlbumController@show')->name('albums.show');
+    Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
 });
