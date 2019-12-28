@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\AlbumResource;
 use App\Http\Resources\AlbumsCollection;
+use App\Http\Resources\AlbumRelatedWithUserResource;
 
 class AlbumController extends Controller
 {
@@ -104,5 +106,17 @@ class AlbumController extends Controller
     public function forceDelete($id): JsonResponse
     {
         //
+    }
+
+    /**
+     * @param Album $album
+     * @param User $user
+     * @return AlbumRelatedWithUserResource
+     */
+    public function showWithUser(Album $album, User $user): AlbumRelatedWithUserResource
+    {
+        $album = Album::where(['creator_id' => $user->id, 'id' => $album->id])->first();
+
+        return new AlbumRelatedWithUserResource($album);
     }
 }
