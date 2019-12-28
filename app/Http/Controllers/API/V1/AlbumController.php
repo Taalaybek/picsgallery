@@ -20,7 +20,7 @@ class AlbumController extends Controller
      *
      * @return AlbumsCollection
      */
-    public function index()
+    public function index(): AlbumsCollection
     {
         return new AlbumsCollection(Cache::remember('albums.index', 60, function () {
             return DB::table('albums')->latest()->paginate(12);
@@ -31,9 +31,9 @@ class AlbumController extends Controller
      * Returns albums of the current user
      * @return AlbumsCollection
      */
-    public function creatorAlbums()
+    public function creatorAlbums(): AlbumsCollection
     {
-
+        return new AlbumsCollection(auth()->user()->albums()->paginate(12));
     }
 
     /**
