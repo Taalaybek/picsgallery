@@ -44,6 +44,7 @@ Route::prefix('v1')->namespace('API\V1')->group(function () {
     /*** UNPROTECTED ALBUM ROUTES ***/
     Route::prefix('albums')->group(function () {
         Route::get('', 'AlbumController@index')->name('albums.index');
+        Route::get('user/{user}', 'AlbumController@userAlbums')->name('albums.userAlbums');
         Route::get('{album}', 'AlbumController@show')->name('albums.show');
         Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
     });
