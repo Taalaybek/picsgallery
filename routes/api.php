@@ -38,6 +38,7 @@ Route::prefix('v1')->namespace('API\V1')->group(function () {
     /*** PROTECTED ***/
     Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::post('albums', 'AlbumController@store')->name('albums.store');
+        Route::get('albums/creatorAlbums', 'AlbumController@creatorAlbums')->name('albums.creatorAlbums');
     });
 
     /*** UNPROTECTED ALBUM ROUTES ***/
