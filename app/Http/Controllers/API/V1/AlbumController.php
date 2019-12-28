@@ -100,4 +100,13 @@ class AlbumController extends Controller
 
         return new AlbumRelatedWithUserResource($album);
     }
+
+    /**
+     * @param User $user
+     * @return AlbumsCollection
+     */
+    public function userAlbums(User $user): AlbumsCollection
+    {
+        return new AlbumsCollection($user->albums()->paginate(12));
+    }
 }
