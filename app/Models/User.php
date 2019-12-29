@@ -38,6 +38,16 @@ class User extends Authenticatable
     ];
 
     /**
+     * User's albums
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function albums()
+    {
+        return $this->hasMany(Album::class, 'creator_id', 'id');
+    }
+
+    /**
      * Method for authorization
      *
      * @param $username
