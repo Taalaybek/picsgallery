@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\User;
 use App\Models\Album;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Events\AlbumDeletedEvent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -101,7 +101,7 @@ class AlbumController extends Controller
     {
         if (auth()->user()->can('delete', $album)) {
             $album->delete();
-
+            event(new AlbumDeletedEvent());
             return response()->json(['message' => 'Successfully deleted the album'], 200);
         }
 
