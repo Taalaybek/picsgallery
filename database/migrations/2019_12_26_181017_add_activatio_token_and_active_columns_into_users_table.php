@@ -15,7 +15,6 @@ class AddActivatioTokenAndActiveColumnsIntoUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('activation_token', 255)
-                ->unique()
                 ->nullable()
                 ->comment('activation token with expired life time');
             $table->boolean('active')->default(false);
