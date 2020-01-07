@@ -49,3 +49,11 @@ Route::prefix('v1/albums')->namespace('API\V1')->group(function () {
     Route::get('{album}', 'AlbumController@show')->name('albums.show');
     Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
 });
+
+/*** PHOTOS ***/
+Route::prefix('v1/photos')->namespace('API\V1')->group(function () {
+    /*** PROTECTED ***/
+    Route::middleware(['auth:api', 'verified'])->group(function () {
+        Route::post('{album}', 'PhotoController@store')->name('photos.store');
+    });
+});
