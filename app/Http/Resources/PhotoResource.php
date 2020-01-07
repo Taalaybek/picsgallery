@@ -29,4 +29,11 @@ class PhotoResource extends JsonResource
             ]
         ];
     }
+
+    public function with($request)
+    {
+        return [
+            'links' => ['self' => route('photos.show', ['photo' => $this->id])]
+        ];
+    }
 }
