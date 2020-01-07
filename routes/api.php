@@ -58,5 +58,6 @@ Route::prefix('v1/photos')->namespace('API\V1')->group(function () {
     });
 
     /*** UNPROTECTED ROUTES ***/
+    Route::get('', 'PhotoController@index')->name('photos.index');
     Route::get('{photo}', 'PhotoController@show')->name('photos.show');
 });
