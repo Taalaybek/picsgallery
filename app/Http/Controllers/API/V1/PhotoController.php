@@ -85,6 +85,12 @@ class PhotoController extends Controller
      */
     public function destroy(Photo $photo): JsonResponse
     {
-        //
+        if (auth()->user()->can('delete', $photo)) {
+            $photo->delete();
+
+            return response()->json(['message' => 'Successfully deleted the photo resource'], 200);
+        }
+
+        return response()->json(['message' => 'You need access to do this action'], 401);
     }
 }
