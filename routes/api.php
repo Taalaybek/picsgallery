@@ -55,6 +55,7 @@ Route::prefix('v1/photos')->namespace('API\V1')->group(function () {
     /*** PROTECTED ***/
     Route::middleware(['auth:api', 'verified'])->group(function () {
         Route::post('{album}', 'PhotoController@store')->name('photos.store');
+        Route::delete('{photo}', 'PhotoController@destroy')->name('photos.destroy');
     });
 
     /*** UNPROTECTED ROUTES ***/
