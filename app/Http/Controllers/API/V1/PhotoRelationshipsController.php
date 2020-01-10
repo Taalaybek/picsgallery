@@ -8,6 +8,7 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AlbumResource;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\CreatorIdentifierResource;
 
 class PhotoRelationshipsController extends Controller
@@ -20,6 +21,8 @@ class PhotoRelationshipsController extends Controller
 	 */
 	public function album(Photo $photo): AlbumResource
 	{
-		return new AlbumResource($photo->album);
+		return new AlbumResource(Cache::remember("photo.id:{$photo->id}.album", 60*60*24, function () use ($photo) {
+				return $photo->album;
+		}));
 	}
 }
