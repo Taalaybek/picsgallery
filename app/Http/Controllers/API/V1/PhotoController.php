@@ -14,83 +14,83 @@ use App\Http\Requests\PhotoStoreRequest;
 
 class PhotoController extends Controller
 {
-    use Uploadable;
+	use Uploadable;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return PhotoCollection
-     */
-    public function index(): PhotoCollection
-    {
-        return new PhotoCollection(Photo::latest()->paginate(12));
-    }
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return PhotoCollection
+	 */
+	public function index(): PhotoCollection
+	{
+		return new PhotoCollection(Photo::latest()->paginate(12));
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param PhotoStoreRequest $request
-     * @param Album $album
-     * @return PhotoResource
-     */
-    public function store(PhotoStoreRequest $request, Album $album)
-    {
-        if (auth()->user()->can('update', $album)) {
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param PhotoStoreRequest $request
+	 * @param Album $album
+	 * @return PhotoResource
+	 */
+	public function store(PhotoStoreRequest $request, Album $album)
+	{
+		if (auth()->user()->can('update', $album)) {
 
-            $photo = $this->setData(
-                $request->file('file'),
-                $request->get('file_name'),
-                $album,
-                'albums'
-            )->toUpload()
-                ->makeThumbnail('small', 350)
-                ->makethumbnail('medium', 400)
-                ->save();
+			$photo = $this->setData(
+				$request->file('file'),
+				$request->get('file_name'),
+				$album,
+				'albums'
+			)->toUpload()
+				->makeThumbnail('small', 350)
+				->makethumbnail('medium', 400)
+				->save();
 
-            return new PhotoResource($album->photos()->save($photo));
-        }
+			return new PhotoResource($album->photos()->save($photo));
+		}
 
-        return response()->json(['message' => 'You need access to do this action'], 401);
-    }
+		return response()->json(['message' => 'You need access to do this action'], 401);
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Photo $photo
-     * @return PhotoResource
-     */
-    public function show(Photo $photo): PhotoResource
-    {
-        return new PhotoResource($photo);
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param Photo $photo
+	 * @return PhotoResource
+	 */
+	public function show(Photo $photo): PhotoResource
+	{
+		return new PhotoResource($photo);
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param Photo $photo
-     * @return PhotoResource
-     */
-    public function update(Request $request, Photo $photo): PhotoResource
-    {
-        //
-    }
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param Request $request
+	 * @param Photo $photo
+	 * @return PhotoResource
+	 */
+	public function update(Request $request, Photo $photo): PhotoResource
+	{
+		//
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Photo $photo
-     * @return JsonResponse
-     * @throws \Exception
-     */
-    public function destroy(Photo $photo): JsonResponse
-    {
-        if (auth()->user()->can('delete', $photo)) {
-            $photo->delete();
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param Photo $photo
+	 * @return JsonResponse
+	 * @throws \Exception
+	 */
+	public function destroy(Photo $photo): JsonResponse
+	{
+		if (auth()->user()->can('delete', $photo)) {
+			$photo->delete();
 
-            return response()->json(['message' => 'Successfully deleted the photo resource'], 200);
-        }
+			return response()->json(['message' => 'Successfully deleted the photo resource'], 200);
+		}
 
-        return response()->json(['message' => 'You need access to do this action'], 401);
-    }
+		return response()->json(['message' => 'You need access to do this action'], 401);
+	}
 }
