@@ -37,15 +37,24 @@ class PhotoController extends Controller
 	{
 		if (auth()->user()->can('update', $album)) {
 
-			$photo = $this->setData(
-				$request->file('file'),
-				$request->get('file_name'),
-				$album,
-				'albums'
-			)->toUpload()
-				->makeThumbnail('small', 350)
-				->makethumbnail('medium', 400)
-				->save();
+			if ($request->has('file_name')) {
+				$photo = $this->setData(
+					$request->file('file'),
+					$album,
+					$request->get('file_name')
+				)->toUpload()
+					->makeThumbnail('small', 350)
+					->makethumbnail('medium', 400)
+					->save();
+			} else {
+				$photo = $this->setData(
+					$request->file('file'),
+					$album
+				)->toUpload()
+					->makeThumbnail('small', 350)
+					->makethumbnail('medium', 400)
+					->save();
+			}
 
 			return new PhotoResource($album->photos()->save($photo));
 		}
