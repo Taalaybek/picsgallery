@@ -44,7 +44,7 @@ class PhotoController extends Controller
 					$request->get('file_name')
 				)->toUpload()
 					->makeThumbnail('small', 350)
-					->makethumbnail('medium', 400)
+					->makeThumbnail('medium', 400)
 					->save();
 			} else {
 				$photo = $this->setData(
@@ -52,7 +52,7 @@ class PhotoController extends Controller
 					$album
 				)->toUpload()
 					->makeThumbnail('small', 350)
-					->makethumbnail('medium', 400)
+					->makeThumbnail('medium', 400)
 					->save();
 			}
 
