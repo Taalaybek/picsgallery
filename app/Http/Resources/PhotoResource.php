@@ -18,14 +18,16 @@ class PhotoResource extends JsonResource
 			'type' => 'photos',
 			'id' => $this->id,
 			'attributes' => [
-				'name' => $this->name,
+				'name' => $this->when(!is_null($this->name), $this->name),
 				'base_name' => $this->base_name,
 				'full_name' => $this->full_name,
 				'mime_type' => $this->mime_type,
 				'size' => $this->size,
 				'original_file_path' => $this->original_file_path,
-				'small' => $this->small,
-				'medium' => $this->medium
+				'thumbnails' => [
+					'small' => $this->small,
+					'medium' => $this->medium
+				]
 			],
 			'relationships' => new PhotoRelationshipResource($this),
 			'links' => [
