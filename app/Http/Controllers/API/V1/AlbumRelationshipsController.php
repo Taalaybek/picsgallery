@@ -9,25 +9,25 @@ use App\Http\Resources\PhotoCollection;
 
 class AlbumRelationshipsController extends Controller
 {
-    /**
-     * Returns the album's photos
-     *
-     * @param  Album $album
-     * @return PhotoCollection
-     */
-    public function photos(Album $album): PhotoCollection
-    {
-        return new PhotoCollection($album->photos()->oldest()->get());
-    }
+	/**
+		* Returns the album's photos
+		*
+		* @param  Album $album
+		* @return PhotoCollection
+		*/
+	public function photos(Album $album): PhotoCollection
+	{
+		return new PhotoCollection($album->photos()->oldest()->get());
+	}
 
-    /**
-     * Returns oldest photo of the album
-     *
-     * @param  Album $album
-     * @return PhotoResource
-     */
-    public function oldestPhoto(Album $album): PhotoResource
-    {
-        return new PhotoResource($album->photos()->oldest()->first());
-    }
+	/**
+		* Returns oldest photo of the album
+		*
+		* @param  Album $album
+		* @return PhotoResource
+		*/
+	public function oldestPhoto(Album $album): PhotoResource
+	{
+		return new PhotoResource($album->photos()->oldest()->first());
+	}
 }
