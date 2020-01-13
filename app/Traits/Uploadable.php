@@ -5,24 +5,23 @@ namespace App\Traits;
 
 use App\Models\Album;
 use App\Models\Photo;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 trait Uploadable
 {
-	private $file;
 	private $path;
 	private $disk;
 	private $album;
 	private $fileName;
-	protected $data = [];
+	private $file = null;
+	private $data = [];
 	private $thumbnails = [];
-	private $separator = DIRECTORY_SEPARATOR;
 
 	/**
 	 * Returns edited file's name
@@ -101,7 +100,7 @@ trait Uploadable
 	 *
 	 * @return string
 	 */
-	public function getFullName(): string
+	private function getFullName(): string
 	{
 		return $this->data['full_name'];
 	}
@@ -112,7 +111,7 @@ trait Uploadable
 	 * @param string $fileName
 	 * @return $this
 	 */
-	public function setFileName(string $fileName)
+	private function setFileName(string $fileName)
 	{
 		$this->fileName = $fileName;
 		return $this;
@@ -122,7 +121,7 @@ trait Uploadable
 	 * @param string $path
 	 * @return $this
 	 */
-	public function setPath(string $path)
+	private function setPath(string $path)
 	{
 		$this->path = $path;
 		return $this;
@@ -142,7 +141,7 @@ trait Uploadable
 	 * Returns thumbnails path
 	 * @return string
 	 */
-	public function getThumbnailsPath()
+	private function getThumbnailsPath()
 	{
 		return $this->disk.'/'.$this->album->id.'/'.'thumbnails';
 	}
@@ -150,6 +149,19 @@ trait Uploadable
 	private function getThumbnailImagePath(int $width): string
 	{
 		return $this->getThumbnailsPath().'/'.$this->getBaseName().'_'.$width.'.'.$this->getExtension();
+	}
+
+	/**
+	 * Accepts and sets photo name
+	 *
+	 * @param string $name
+	 * @return Uploadable $this
+	 */
+	private function setName(string $name)
+	{
+		$this->data['name'] = $name;
+
+		return $this;
 	}
 
 	/**
@@ -161,10 +173,15 @@ trait Uploadable
 	 * @param string $disk
 	 * @return Uploadable
 	 */
-	public function setData(UploadedFile $file, Album $album, string $fileName = null, string $disk = 'albums')
+	protected function setData(
+		UploadedFile $file,
+		Album $album,
+		string $fileName = null,
+		string $disk = 'albums'
+		)
 	{
 		if (!\is_null($fileName)) {
-			$this->data['name'] = $fileName;
+			$this->setName($fileName);
 			$this->setFileName($fileName);
 		} else {
 			$this->setFileName(mb_strtolower(env('APP_NAME')));
@@ -182,12 +199,63 @@ trait Uploadable
 	}
 
 	/**
+	 * Accepts request data and a Photo model
+	 *
+	 * @param Photo $photo
+	 * @param Request $request
+	 * @param string $disk
+	 * @return void
+	 */
+	protected function setUpdatableData(
+		Photo $photo,
+		Request $request,
+		string $disk = 'albums'
+		)
+	{
+		$this->album = $photo->album;
+		$this->disk = $disk;
+
+		if ($request->has('file_name')) {
+			$this->setName($request->get('file_name'));
+    }
+
+		if ($request->has('file_name') && $request->hasFile('file') && $request->file('file')->isValid()) {
+			$this->setName($request->get('file_name'));
+			$this->setFileName($request->get('file_name'));
+    }
+
+		if (!$request->has('file_name') && $request->hasFile('file') && $request->file('file')->isValid()) {
+
+			if (!is_null($photo->name)) {
+				$this->setFileName($photo->name);
+			} else {
+				$this->setFileName(mb_strtolower(config('name')));
+			}
+
+		}
+
+		if ($request->hasFile('file') && $request->file('file')->isValid()) {
+			$this->setFile($request->file('file'));
+			$this->data['base_name'] = $this->getFileName();
+			$this->data['full_name'] = $this->getBaseName().'.'.$this->getExtension();
+			$this->data['mime_type'] = $this->getExtension();
+			$this->data['size'] = $this->getFileSize();
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Returns formatted data
 	 *
 	 * @return array
 	 */
-	private function getData(): array
+	protected function getData(): array
 	{
+		if (!is_null($this->getFile())) {
+			$this->data['thumbnails'] = json_encode($this->thumbnails);
+		}
+
 		return $this->data;
 	}
 
@@ -196,7 +264,7 @@ trait Uploadable
 	 *
 	 * @return $this
 	 */
-	public function toUpload()
+	protected function toUpload()
 	{
 		$this->detectDiskFolder()
 			->detectDiskSymlink();
@@ -219,7 +287,7 @@ trait Uploadable
 	 * @param int|null $height
 	 * @return $this | JsonResponse
 	 */
-	public function makeThumbnail(string $size, int $width = null, int $height = null)
+	protected function makeThumbnail(string $size, int $width = null, int $height = null)
 	{
 		$this->detectThumbnailsFolder();
 
@@ -295,9 +363,8 @@ trait Uploadable
 	 *
 	 * @return Photo
 	 */
-	public function save()
+	protected function save()
 	{
-		$this->data['thumbnails'] = json_encode($this->thumbnails);
 		return new Photo($this->getData());
 	}
 }
