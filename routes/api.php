@@ -33,6 +33,14 @@ Route::prefix('v1/auth')->group(function () {
 	});
 });
 
+/*** USERS ***/
+Route::prefix('v1/users')->namespace('API\V1')->group(function () {
+	Route::get('', 'UserController@index')->name('users.index');
+	Route::get('{user}', 'UserController@show')->name('users.show');
+	Route::get('{user}/relationship/albums', 'UserRelationshipsController@albums')->name('users.relationship.albums');
+	Route::get('{user}/relationship/photos', 'UserRelationshipsController@photos')->name('users.relationship.photos');
+});
+
 /*** ALBUMS ***/
 Route::prefix('v1/albums')->namespace('API\V1')->group(function () {
 	/*** PROTECTED ***/
