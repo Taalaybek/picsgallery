@@ -109,16 +109,6 @@ class AlbumController extends Controller
 	}
 
 	/**
-		* @param Album $album
-		* @param User $user
-		* @return AlbumResource
-		*/
-	public function showWithUser(Album $album, User $user): AlbumResource
-	{
-		return new AlbumResource($user->albums()->where('id', $album->id)->first(), true);
-	}
-
-	/**
 		* @param User $user
 		* @return AlbumsCollection
 		*/
