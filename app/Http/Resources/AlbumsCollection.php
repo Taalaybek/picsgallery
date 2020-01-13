@@ -8,23 +8,23 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class AlbumsCollection extends ResourceCollection
 {
-    /**
-     * Transform the resource collection into an array.
-     *
-     * @param  Request  $request
-     * @return AnonymousResourceCollection
-     */
-    public function toArray($request)
-    {
-        return AlbumResource::collection($this->collection);
-    }
+	/**
+		* Transform the resource collection into an array.
+		*
+		* @param  Request  $request
+		* @return AnonymousResourceCollection
+		*/
+	public function toArray($request)
+	{
+		return AlbumResource::collection($this->collection);
+	}
 
-    public function with($request)
-    {
-        return [
-            'links' => [
-                'links' => route('albums.index')
-            ]
-        ];
-    }
+	public function with($request)
+	{
+		return [
+			'links' => [
+				'links' => route('albums.index')
+			]
+		];
+	}
 }
