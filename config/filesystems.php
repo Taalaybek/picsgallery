@@ -64,6 +64,13 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'albums' => [
+            'driver' => 'local',
+            'root' => storage_path('app/albums'),
+            'url' => env('APP_URL').'/albums',
+            'visibility' => 'public',
+        ]
+
     ],
 
 ];

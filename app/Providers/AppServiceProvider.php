@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Console\Commands\ModelMakeCommand;
+use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Resource::withoutWrapping();
     }
 }
