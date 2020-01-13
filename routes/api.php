@@ -55,10 +55,10 @@ Route::prefix('v1/albums')->namespace('API\V1')->group(function () {
 	Route::get('', 'AlbumController@index')->name('albums.index');
 	Route::get('user/{user}', 'AlbumController@userAlbums')->name('albums.userAlbums');
 	Route::get('{album}', 'AlbumController@show')->name('albums.show');
-	Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
 	// RELATIONSHIPS RESOURCES ROUTES
 	Route::get('{album}/relationship/photos', 'AlbumRelationshipsController@photos')->name('albums.relationship.photos');
 	Route::get('{album}/relationship/oldestPhoto', 'AlbumRelationshipsController@oldestPhoto')->name('albums.relationship.oldestPhoto');
+	Route::get('{album}/relationship/user/{user}', 'AlbumRelationshipsController@withUser')->name('albums.relationship.withUser');
 });
 
 /*** PHOTOS ***/
