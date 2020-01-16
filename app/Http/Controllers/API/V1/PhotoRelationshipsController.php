@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\User;
-use App\Models\Album;
 use App\Models\Photo;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AlbumResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\CreatorIdentifierResource;
 
 class PhotoRelationshipsController extends Controller
 {
@@ -24,5 +21,16 @@ class PhotoRelationshipsController extends Controller
 		return new AlbumResource(Cache::remember("photo.id:{$photo->id}.album", 60*60*24, function () use ($photo) {
 				return $photo->album;
 		}));
+	}
+
+	/**
+	 * Returns creator resource of the photo
+	 *
+	 * @param Photo $photo
+	 * @return UserResource
+	 */
+	public function creator(Photo $photo): UserResource
+	{
+		return new UserResource($photo->album->creator);
 	}
 }
