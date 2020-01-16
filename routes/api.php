@@ -75,4 +75,5 @@ Route::prefix('v1/photos')->namespace('API\V1')->group(function () {
 	Route::get('{photo}', 'PhotoController@show')->name('photos.show');
 	// RELATIONSHIPS RESOURCES ROUTES
 	Route::get('{photo}/relationship/album', 'PhotoRelationshipsController@album')->name('photos.relationships.album');
+	Route::get('{photo}/relationship/creator', 'PhotoRelationshipsController@creator')->name('photos.relationships.creator');
 });
