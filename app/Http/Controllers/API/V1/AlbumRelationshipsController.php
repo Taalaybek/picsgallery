@@ -5,8 +5,8 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\User;
 use App\Models\Album;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PhotoResource;
-use App\Http\Resources\PhotoCollection;
+use App\Http\Resources\Photo\PhotoResource;
+use App\Http\Resources\Photo\PhotoCollection;
 use App\Http\Resources\AlbumsCollection;
 use App\Http\Resources\AlbumResourceForCollections;
 

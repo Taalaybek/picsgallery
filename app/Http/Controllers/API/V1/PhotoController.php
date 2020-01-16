@@ -7,8 +7,8 @@ use App\Models\Photo;
 use App\Traits\Uploadable;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PhotoResource;
-use App\Http\Resources\PhotoCollection;
+use App\Http\Resources\Photo\PhotoResource;
+use App\Http\Resources\Photo\PhotoCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\PhotoStoreRequest;
 use App\Http\Requests\PhotoUpdateRequest;
@@ -83,7 +83,7 @@ class PhotoController extends Controller
    * @param Photo $photo
    * @return PhotoResource
    */
-  public function update(PhotoUpdateRequest $request, Photo $photo)//: PhotoResource
+  public function update(PhotoUpdateRequest $request, Photo $photo): PhotoResource
   {
     if (auth()->user()->can('update', $photo)) {
       if ($request->hasFile('file') && $request->file('file')->isValid()) {
