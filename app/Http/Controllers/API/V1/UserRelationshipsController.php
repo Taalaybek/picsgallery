@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\PhotoCollection;
+use App\Http\Resources\Photo\PhotoCollection;
 use App\Http\Resources\AlbumsCollection;
 
 class UserRelationshipsController extends Controller
