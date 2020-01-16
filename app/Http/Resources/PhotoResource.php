@@ -29,7 +29,7 @@ class PhotoResource extends JsonResource
 					'medium' => $this->medium
 				]
 			],
-			'relationships' => new PhotoRelationshipResource($this),
+			'relationships' => new PhotoRelationshipResource($this, SimpleAlbumResource::class, SimpleUserResource::class),
 			'links' => [
 				'self' => route('photos.show', ['photo' => $this->id])
 			]
