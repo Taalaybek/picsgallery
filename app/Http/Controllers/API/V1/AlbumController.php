@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\User;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use App\Events\AlbumDeletedEvent;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AlbumResource;
 use Illuminate\Support\Facades\Cache;
@@ -23,17 +21,8 @@ class AlbumController extends Controller
 	public function index(): AlbumsCollection
 	{
 		return new AlbumsCollection(Cache::remember('albums.index', 60, function () {
-			return DB::table('albums')->latest()->paginate(12);
+			return Album::whereHas('photos')->with('creator')->latest()->paginate(12);
 		}));
-	}
-
-	/**
-		* Returns albums of the current user
-		* @return AlbumsCollection
-		*/
-	public function creatorAlbums(): AlbumsCollection
-	{
-		return new AlbumsCollection(auth()->user()->albums()->latest()->paginate(12));
 	}
 
 	/**
@@ -106,14 +95,5 @@ class AlbumController extends Controller
 		}
 
 		return \response()->json(['message' => 'You need access to do this action'], 401);
-	}
-
-	/**
-		* @param User $user
-		* @return AlbumsCollection
-		*/
-	public function userAlbums(User $user): AlbumsCollection
-	{
-		return new AlbumsCollection($user->albums()->paginate(12));
 	}
 }

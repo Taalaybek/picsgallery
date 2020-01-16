@@ -5,9 +5,10 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\User;
 use App\Models\Album;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AlbumResource;
 use App\Http\Resources\PhotoResource;
 use App\Http\Resources\PhotoCollection;
+use App\Http\Resources\AlbumsCollection;
+use App\Http\Resources\AlbumResourceForCollections;
 
 class AlbumRelationshipsController extends Controller
 {
@@ -38,10 +39,28 @@ class AlbumRelationshipsController extends Controller
 	 *
 	 * @param Album $album
 	 * @param User $user
-	 * @return AlbumResource
+	 * @return AlbumResourceForCollections
 	 */
-	public function withUser(Album $album, User $user): AlbumResource
+	public function withUser(Album $album, User $user): AlbumResourceForCollections
 	{
-		return new AlbumResource($user->albums()->where('id', $album->id)->first(), true);
+		return new AlbumResourceForCollections($user->albums()->where('id', $album->id)->first());
+	}
+
+		/**
+		* Returns albums of the current user
+		* @return AlbumsCollection
+		*/
+	public function authenticatedUserAlbums(): AlbumsCollection
+	{
+		return new AlbumsCollection(auth()->user()->albums()->latest()->paginate(12));
+	}
+
+	/**
+		* @param User $user
+		* @return AlbumsCollection
+		*/
+	public function userAlbums(User $user): AlbumsCollection
+	{
+		return new AlbumsCollection($user->albums()->paginate(12));
 	}
 }

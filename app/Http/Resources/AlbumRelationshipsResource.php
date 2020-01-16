@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\SimplePhotoResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\CreatorIdentifierResource;
 
 class AlbumRelationshipsResource extends JsonResource
 {
@@ -20,11 +20,11 @@ class AlbumRelationshipsResource extends JsonResource
 				'links' => [
 					'self' => route('users.show', ['user' => $this->creator_id])
 				],
-				'data' => new CreatorIdentifierResource($this->creator)
+				'data' => new SimpleUserResource($this->creator)
 			],
 			'photos' => [
 				'links' => ['self' => route('photos.index')],
-				'data' => PhotoIdentifierResource::collection($this->photos)
+				'data' => SimplePhotoResource::collection($this->photos)
 			]
 		];
 	}
