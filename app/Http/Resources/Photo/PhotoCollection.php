@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Photo;
 
+use App\Http\Resources\Photo\PhotoResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PhotoCollection extends ResourceCollection
