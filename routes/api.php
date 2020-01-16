@@ -46,19 +46,19 @@ Route::prefix('v1/albums')->namespace('API\V1')->group(function () {
 	/*** PROTECTED ***/
 	Route::middleware(['auth:api', 'verified'])->group(function () {
 		Route::post('', 'AlbumController@store')->name('albums.store');
-		Route::get('creatorAlbums', 'AlbumController@creatorAlbums')->name('albums.creatorAlbums');
 		Route::delete('{album}', 'AlbumController@destroy')->name('albums.destroy');
 		Route::patch('{album}', 'AlbumController@update')->name('albums.update');
+		Route::get('authenticatedUserAlbums', 'AlbumRelationshipsController@authenticatedUserAlbums')->name('albums.creatorAlbums');
 	});
 
 	/*** UNPROTECTED ALBUM ROUTES ***/
 	Route::get('', 'AlbumController@index')->name('albums.index');
-	Route::get('user/{user}', 'AlbumController@userAlbums')->name('albums.userAlbums');
 	Route::get('{album}', 'AlbumController@show')->name('albums.show');
-	Route::get('{album}/user/{user}', 'AlbumController@showWithUser')->name('albums.show.withUser');
 	// RELATIONSHIPS RESOURCES ROUTES
+	Route::get('relationship/user/{user}', 'AlbumRelationshipsController@userAlbums')->name('albums.userAlbums');
 	Route::get('{album}/relationship/photos', 'AlbumRelationshipsController@photos')->name('albums.relationship.photos');
 	Route::get('{album}/relationship/oldestPhoto', 'AlbumRelationshipsController@oldestPhoto')->name('albums.relationship.oldestPhoto');
+	Route::get('{album}/relationship/user/{user}', 'AlbumRelationshipsController@withUser')->name('albums.relationship.withUser');
 });
 
 /*** PHOTOS ***/
