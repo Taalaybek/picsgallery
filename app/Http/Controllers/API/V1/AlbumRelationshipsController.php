@@ -7,8 +7,8 @@ use App\Models\Album;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Photo\PhotoResource;
 use App\Http\Resources\Photo\PhotoCollection;
-use App\Http\Resources\AlbumsCollection;
-use App\Http\Resources\AlbumResourceForCollections;
+use App\Http\Resources\Album\AlbumsCollection;
+use App\Http\Resources\Album\AlbumResourceForCollections;
 
 class AlbumRelationshipsController extends Controller
 {

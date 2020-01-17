@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Album\AlbumIdentifierResource;
+use App\Http\Resources\Photo\PhotoIdentifierResource;
 
 class UserRelationshipsResource extends JsonResource
 {

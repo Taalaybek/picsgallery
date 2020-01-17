@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\Photo;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AlbumResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\Album\AlbumResource;
 
 class PhotoRelationshipsController extends Controller
 {

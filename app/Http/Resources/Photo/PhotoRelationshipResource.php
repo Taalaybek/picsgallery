@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources\Photo;
 
-use App\Http\Resources\AlbumIdentifierResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\CreatorIdentifierResource;
+use App\Http\Resources\Album\AlbumIdentifierResource;
 
 class PhotoRelationshipResource extends JsonResource
 {

@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Events\AlbumDeletedEvent;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AlbumResource;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\AlbumsCollection;
+use App\Http\Resources\Album\AlbumResource;
+use App\Http\Resources\Album\AlbumsCollection;
 
 class AlbumController extends Controller
 {
