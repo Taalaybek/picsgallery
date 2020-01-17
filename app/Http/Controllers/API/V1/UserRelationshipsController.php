@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\Photo\PhotoCollection;
 use App\Http\Resources\Album\AlbumsCollection;
-use App\Http\Resources\Album\SimpleAlbumResource;
 
 class UserRelationshipsController extends Controller
 {
