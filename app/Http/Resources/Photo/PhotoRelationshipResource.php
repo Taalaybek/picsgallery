@@ -2,24 +2,21 @@
 
 namespace App\Http\Resources\Photo;
 
+use App\Http\Resources\AlbumIdentifierResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CreatorIdentifierResource;
 
 class PhotoRelationshipResource extends JsonResource
 {
 	protected $albumInstance;
 	protected $creatorInstance;
 
-	public function __construct($resource, string $albumInstance, string $creatorInstance)
+	public function __construct($resource, string $albumInstance = null, string $creatorInstance = null)
 	{
 		parent::__construct($resource);
 
-		if ($this->resourceExists($this->albumInstance) && $this->resourceExists($this->creatorInstance)) {
-			$this->albumInstance = $albumInstance;
-			$this->creatorInstance = $creatorInstance;
-		} else {
-			$this->albumInstance = AlbumIdentifierResource::class;
-			$this->creatorInstance = CreatorIdentifierResource::class;
-		}
+		$this->albumInstance = $albumInstance;
+		$this->creatorInstance = $creatorInstance;
 	}
 
 	/**
@@ -30,6 +27,8 @@ class PhotoRelationshipResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		$this->checkResourceInstance();
+		
 		return [
 			'album' => [
 				'links' => [
@@ -39,9 +38,29 @@ class PhotoRelationshipResource extends JsonResource
 				'data' => new $this->albumInstance($this->album)
 			],
 			'creator' => [
+				'links' => [
+					'self' => route('users.show', ['user' => $this->album->creator]),
+					'related' => route('photos.relationships.creator', ['photo' => $this->id])
+				],
 				'data' => new $this->creatorInstance($this->album->creator)
 			]
 		];
+	}
+
+	/**
+	 * Checks creator and album resources
+	 *
+	 * @return this
+	 */
+	private function checkResourceInstance()
+	{
+		if (is_null($this->creatorInstance) && is_null($this->albumInstance) || 
+		!$this->resourceExists($this->albumInstance) && !$this->resourceExists($this->creatorInstance)) {
+			$this->albumInstance = AlbumIdentifierResource::class;
+			$this->creatorInstance = CreatorIdentifierResource::class;
+		}
+
+		return $this;
 	}
 
 	/**
