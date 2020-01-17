@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\UsersCollection;
+use App\Http\Resources\Creator\UserResource;
+use App\Http\Resources\Creator\UsersCollection;
 
 class UserController extends Controller
 {

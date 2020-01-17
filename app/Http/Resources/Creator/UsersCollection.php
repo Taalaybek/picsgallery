@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Creator;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Creator\UserResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UsersCollection extends ResourceCollection
