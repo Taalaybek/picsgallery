@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Album;
 
-use App\Http\Resources\SimplePhotoResource;
+use App\Http\Resources\SimpleUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Photo\SimplePhotoResource;
 
 class AlbumRelationshipsResource extends JsonResource
 {
