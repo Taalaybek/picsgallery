@@ -40,7 +40,7 @@ class AccountActivate extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/api/v1/auth/account-activation/'.$notifiable->activation_token);
+        $url = url('/web/auth/account-activate/'.$notifiable->activation_token);
         return (new MailMessage)
                     ->subject('Confirm your account')
                     ->line('Please click link in below for activate your account.')
