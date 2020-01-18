@@ -11,6 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'SingleController@home')->name('home');
+Route::get('web/auth/account-activate/{token}', 'SingleController@accountActivate')->name('web.auth.account-activate');
