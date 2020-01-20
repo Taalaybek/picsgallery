@@ -76,3 +76,9 @@ Route::prefix('v1/photos')->namespace('API\V1')->group(function () {
 	Route::get('{photo}/relationship/album', 'PhotoRelationshipsController@album')->name('photos.relationships.album');
 	Route::get('{photo}/relationship/creator', 'PhotoRelationshipsController@creator')->name('photos.relationships.creator');
 });
+
+/*** UNCATEGORIZED API ROUTES ***/
+Route::prefix('v1/common')->namespace('API\V1')->group(function () {
+	/*** UNPROTECTED ROUTES ***/
+	Route::post('checkEmail', 'UserController@checkEmail')->name('common.checkEmail');
+});
