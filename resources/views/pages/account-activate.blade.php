@@ -6,7 +6,7 @@
 	</p>
 	<script>
 		setTimeout(() => {
-			window.location.href = 'http://picsgallery.test:8080'
+			window.location.href = '{{ env('FRONT_APP_URL') }}'
 		}, 4000)
 	</script>
 @endsection
