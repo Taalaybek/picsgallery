@@ -67,6 +67,7 @@ Route::prefix('v1/photos')->namespace('API\V1')->group(function () {
     Route::post('{album}', 'PhotoController@store')->name('photos.store');
     Route::delete('{photo}', 'PhotoController@destroy')->name('photos.destroy');
     Route::put('{photo}', 'PhotoController@update')->name('photos.update');
+		Route::post('addTemp/new', 'PhotoController@addTempPhoto')->name('photos.store.temporary');
   });
 
 	/*** UNPROTECTED ROUTES ***/
