@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\AlbumCreatedWithPhotos;
 use App\Events\AlbumDeletedEvent;
+use App\Listeners\AlbumCreatedListener;
 use App\Listeners\AlbumDeletedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,7 +23,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         AlbumDeletedEvent::class => [
             AlbumDeletedListener::class
-        ]
+        ],
+				AlbumCreatedWithPhotos::class => [
+					AlbumCreatedListener::class
+				]
     ];
 
     /**
