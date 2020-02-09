@@ -22,7 +22,7 @@ class CreatePhotosTable extends Migration
             $table->string('base_name')->nullable()->comment('base name without mime type');
             $table->string('full_name')->nullable()->comment('base name without mime type');
             $table->json('thumbnails')->nullable()->comment('thumbnails');
-            $table->unsignedBigInteger('album_id')->comment('related album');
+            $table->unsignedBigInteger('album_id')->nullable()->comment('related album');
             $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
             $table->timestamps();
         });
