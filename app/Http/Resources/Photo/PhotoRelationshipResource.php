@@ -28,7 +28,7 @@ class PhotoRelationshipResource extends JsonResource
 	public function toArray($request)
 	{
 		$this->checkResourceInstance();
-		
+
 		return [
 			'album' => [
 				'links' => [
@@ -42,7 +42,7 @@ class PhotoRelationshipResource extends JsonResource
 					'self' => route('users.show', ['user' => $this->album->creator]),
 					'related' => route('photos.relationships.creator', ['photo' => $this->id])
 				],
-				'data' => new $this->creatorInstance($this->album->creator)
+				'data' => new $this->creatorInstance($this->creator)
 			]
 		];
 	}
@@ -50,11 +50,11 @@ class PhotoRelationshipResource extends JsonResource
 	/**
 	 * Checks creator and album resources
 	 *
-	 * @return this
+	 * @return PhotoRelationshipResource
 	 */
 	private function checkResourceInstance()
 	{
-		if (is_null($this->creatorInstance) && is_null($this->albumInstance) || 
+		if (is_null($this->creatorInstance) && is_null($this->albumInstance) ||
 		!$this->resourceExists($this->albumInstance) && !$this->resourceExists($this->creatorInstance)) {
 			$this->albumInstance = AlbumIdentifierResource::class;
 			$this->creatorInstance = CreatorIdentifierResource::class;
@@ -64,7 +64,7 @@ class PhotoRelationshipResource extends JsonResource
 	}
 
 	/**
-	 * Returns boolean if class exists 
+	 * Returns boolean if class exists
 	 * and class extends JsonResource
 	 *
 	 * @param string $class
