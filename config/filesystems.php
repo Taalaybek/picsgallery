@@ -69,6 +69,13 @@ return [
             'root' => storage_path('app/albums'),
             'url' => env('APP_URL').'/albums',
             'visibility' => 'public',
+        ],
+
+        'temp' => [
+            'driver' => 'local',
+            'root' => storage_path('app/temp'),
+            'url' => env('APP_URL').'/temp',
+            'visibility' => 'public',
         ]
 
     ],
