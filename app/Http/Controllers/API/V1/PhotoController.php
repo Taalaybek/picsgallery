@@ -4,19 +4,21 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\Album;
 use App\Models\Photo;
-use App\Traits\Uploadable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Photo\PhotoResource;
-use App\Http\Resources\Photo\PhotoCollection;
+use App\Services\AlbumsPhotoResolver;
+use App\Services\PhotoResolverService;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\PhotoStoreRequest;
 use App\Http\Requests\PhotoUpdateRequest;
+use App\Http\Resources\Photo\PhotoResource;
+use App\Http\Resources\Photo\PhotoCollection;
+use App\Http\Resources\Photo\SimplePhotoResource;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class PhotoController extends Controller
 {
-  use Uploadable;
-
   /**
    * Display a listing of the resource.
    *
@@ -24,23 +26,24 @@ class PhotoController extends Controller
    */
   public function index(): PhotoCollection
   {
-    return new PhotoCollection(Photo::latest()->paginate(12));
+    return new PhotoCollection(Photo::whereHas('album')->latest()->paginate(12));
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param PhotoStoreRequest $request
-   * @param Album $album
-   * @return PhotoResource
-   */
-  public function store(PhotoStoreRequest $request, Album $album)
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param PhotoStoreRequest $request
+	 * @param AlbumsPhotoResolver $photoResolver
+	 * @param Album $album
+	 * @return PhotoResource|JsonResponse
+	 */
+  public function store(PhotoStoreRequest $request, AlbumsPhotoResolver $photoResolver, Album $album)
   {
     if (auth()->user()->can('update', $album)) {
 
       if ($request->has('file_name')) {
 
-        $photo = $this->setData(
+        $photo = $photoResolver->setData(
           $request->file('file'),
           $album,
           $request->get('file_name')
@@ -51,7 +54,7 @@ class PhotoController extends Controller
 
       } else {
 
-        $photo = $this->setData($request->file('file'), $album)
+        $photo = $photoResolver->setData($request->file('file'), $album)
           ->toUpload()
           ->makeThumbnail('small', 350)
           ->makeThumbnail('medium', 400)
@@ -76,14 +79,15 @@ class PhotoController extends Controller
     return new PhotoResource($photo);
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param PhotoUpdateRequest $request
-   * @param Photo $photo
-   * @return PhotoResource
-   */
-  public function update(PhotoUpdateRequest $request, Photo $photo): PhotoResource
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param PhotoUpdateRequest $request
+	 * @param AlbumsPhotoResolver $photoResolver
+	 * @param Photo $photo
+	 * @return PhotoResource|JsonResponse
+	 */
+  public function update(PhotoUpdateRequest $request, AlbumsPhotoResolver $photoResolver, Photo $photo): PhotoResource
   {
     if (auth()->user()->can('update', $photo)) {
       if ($request->hasFile('file') && $request->file('file')->isValid()) {
@@ -95,9 +99,9 @@ class PhotoController extends Controller
           ->makeThumbnail('small', 350)
           ->makeThumbnail('medium', 400)
           ->getData();
-          
+
       } else {
-        $data = $this->setUpdatableData($photo, $request)->getData();
+        $data = $photoResolver->setMutableData($photo, $request)->getData();
       }
       $photo->update($data);
       return new PhotoResource($photo);
@@ -132,10 +136,40 @@ class PhotoController extends Controller
    */
   private function deletePhotos(Photo $photo): void
   {
-    Storage::delete([
-      $photo->original_file_path,
-      $photo->medium,
-      $photo->small
-    ]);
+		Storage::delete([
+			$photo->original_file_path,
+			$photo->medium,
+			$photo->small
+		]);
+  }
+
+	/**
+	 * Adds temporary photo file
+	 *
+	 * @param PhotoStoreRequest $request
+	 * @param PhotoResolverService $photoResolver
+	 * @return SimplePhotoResource
+	 */
+  public function addTempPhoto(PhotoStoreRequest $request, PhotoResolverService $photoResolver)
+  {
+    if ($request->has('file_name')) {
+      $photo = $photoResolver->setData(
+        $request->file('file'),
+        \auth()->user(),
+        $request->get('file_name'),
+        'temp'
+      )->toUpload()->makeThumbnail('small', 350)->makeThumbnail('medium', 400)->save();
+
+      return new SimplePhotoResource(auth()->user()->photos()->save($photo));
+    }
+
+    $photo = $photoResolver->setData(
+      $request->file('file'),
+      \auth()->user(),
+      null,
+      'temp'
+    )->toUpload()->makeThumbnail('small', 350)->makeThumbnail('medium', 400)->save();
+
+    return new SimplePhotoResource(auth()->user()->photos()->save($photo));
   }
 }
