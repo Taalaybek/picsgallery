@@ -94,7 +94,7 @@ class PhotoController extends Controller
         // delete photos if file exists
         $this->deletePhotos($photo);
 
-        $data = $this->setUpdatableData($photo, $request)
+        $data = $photoResolver->setMutableData($photo, $request)
           ->toUpload()
           ->makeThumbnail('small', 350)
           ->makeThumbnail('medium', 400)
