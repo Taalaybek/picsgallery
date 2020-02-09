@@ -8,6 +8,7 @@ use App\Events\AlbumDeletedEvent;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use App\Events\AlbumCreatedWithPhotos;
 use App\Http\Resources\Album\AlbumResource;
 use App\Http\Resources\Album\AlbumsCollection;
 
@@ -35,12 +36,17 @@ class AlbumController extends Controller
 	{
 		$request->validate([
 				'name' => 'required|string|min:6|max:255',
-				'description' => 'sometimes|string|min:10|max:400'
+				'description' => 'sometimes|string|min:10|max:400',
+				'photos' => 'sometimes|array'
 		]);
 
 		$request->merge(['creator_id' => auth()->user()->id]);
 
-		$album = Album::create($request->all());
+		$album = Album::create($request->except('photos'));
+
+		if ($request->has('photos')) {
+			event(new AlbumCreatedWithPhotos($album, $request->get('photos')));
+		}
 
 		return new AlbumResource($album);
 	}
@@ -57,12 +63,12 @@ class AlbumController extends Controller
 	}
 
 	/**
-		* Update the specified resource in storage.
-		*
-		* @param Request $request
-		* @param Album $album
-		* @return AlbumResource
-		*/
+	 * Update the specified resource in storage.
+	 *
+	 * @param Request $request
+	 * @param Album $album
+	 * @return AlbumResource|JsonResponse
+	 */
 	public function update(Request $request, Album $album)
 	{
 		if (auth()->user()->can('update', $album)) {
