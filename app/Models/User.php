@@ -48,6 +48,16 @@ class User extends Authenticatable
     }
 
     /**
+     * User's photos
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function photos(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Photo::class, 'user_id', 'id');
+    }
+
+    /**
      * Method for authorization
      *
      * @param $username
