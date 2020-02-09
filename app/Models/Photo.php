@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class Photo extends Model
@@ -18,10 +21,7 @@ class Photo extends Model
         'thumbnails',
         'full_name',
         'original_file_path',
-    ];
-
-    protected $casts = [
-        'thumbnails' => 'array'
+        'user_id'
     ];
 
     protected static function boot()
@@ -37,6 +37,11 @@ class Photo extends Model
     public function album()
     {
         return $this->belongsTo(Album::class, 'album_id', 'id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function getSmallAttribute()
